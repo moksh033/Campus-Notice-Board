@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "partials/_form_helpers.html" import field %}
+{% set editing = announcement is not none %}
+{% block title %}{{ 'Edit announcement' if editing else 'New announcement' }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<section class="page-head">
+  <h1>{{ 'Edit announcement' if editing else 'New announcement' }}</h1>
+</section>
+
+{% if errors %}
+<div class="flash flash-error" role="alert">
+  <strong>Please fix the following:</strong>
+  <ul>{% for message in errors.values() %}<li>{{ message }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="form-card" novalidate>
+  {{ form.hidden_tag() }}
+  {{ field(form.title, maxlength=150) }}
+  {{ field(form.category) }}
+  {{ field(form.description, rows=7) }}
+  <div class="form-grid">
+    {{ field(form.event_date) }}
+    {{ field(form.event_time) }}
+  </div>
+  {{ field(form.venue) }}
+  {{ field(form.registration_link, hint="Start with https://") }}
+
+  <fieldset class="form-fieldset">
+    <legend>Attachments</legend>
+    {% if editing and announcement.get_attachment('poster') %}
+      <p class="current-file">Current poster: {{ announcement.get_attachment('poster').original_filename }}</p>
+      {{ field(form.remove_poster) }}
+    {% endif %}
+    {{ field(form.poster, hint="Uploading a new file replaces the current one.", accept=".png,.jpg,.jpeg,.webp") }}
+    {% if editing and announcement.get_attachment('pdf') %}
+      <p class="current-file">Current PDF: {{ announcement.get_attachment('pdf').original_filename }}</p>
+      {{ field(form.remove_pdf) }}
+    {% endif %}
+    {{ field(form.pdf, accept=".pdf") }}
+  </fieldset>
+
+  <div class="form-row form-check">{{ form.is_published() }} {{ form.is_published.label }}</div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">{{ 'Save changes' if editing else 'Save announcement' }}</button>
+    <a class="btn btn-secondary" href="{{ url_for('admin.dashboard') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+/* Publisher management screens. Owner: Mihir. */
+.admin-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th, .admin-table td { padding: .7rem .9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.admin-table th { background: var(--soft-blue); color: var(--navy); font-size: .875rem; }
+.admin-table tr:last-child td { border-bottom: 0; }
+.actions { white-space: nowrap; }
+.actions > * { margin-right: .25rem; }
+.status { font-size: .8rem; font-weight: 600; padding: .1rem .55rem; border-radius: 999px; }
+.status.live { background: var(--green-tint); color: #0B4F37; }
+.status.draft { background: #ECEFF3; color: #353F4D; }
+.form-card { max-width: 720px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1rem 0; margin: 0 0 1rem; }
+.form-fieldset legend { font-weight: 600; padding: 0 .4rem; color: var(--navy); }
+.current-file { margin: 0 0 .4rem; color: var(--text-muted); font-size: .9rem; }
+.form-check { display: flex; align-items: center; gap: .5rem; }
+.form-check label { margin: 0; }
+.form-actions { display: flex; gap: .75rem; }
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+  .admin-table tr { border-bottom: 1px solid var(--border); padding: .5rem 0; }
+  .admin-table td { border: 0; padding: .3rem .9rem; }
+  .admin-table td::before { content: attr(data-label) ": "; font-weight: 600; color: var(--text-muted); }
+  .actions { white-space: normal; }
+}

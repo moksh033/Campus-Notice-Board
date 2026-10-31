@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Manage announcements{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<section class="page-head admin-head">
+  <div>
+    <h1>Your announcements</h1>
+    <p class="lead">Signed in as {{ current_user.username }}. Drafts are only visible to you.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('admin.create') }}">New announcement</a>
+</section>
+
+{% if announcements %}
+<div class="table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Last updated</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for a in announcements %}
+      <tr>
+        <td data-label="Title">
+          {% if a.is_published %}<a href="{{ url_for('notices.detail', announcement_id=a.id) }}">{{ a.title }}</a>{% else %}{{ a.title }}{% endif %}
+        </td>
+        <td data-label="Category"><span class="chip {{ a.category|cat_class }}">{{ a.category }}</span></td>
+        <td data-label="Status"><span class="status {{ 'live' if a.is_published else 'draft' }}">{{ 'Published' if a.is_published else 'Draft' }}</span></td>
+        <td data-label="Last updated">{{ a.updated_at|date_fmt }}</td>
+        <td data-label="Actions" class="actions">
+          <a class="btn btn-small btn-secondary" href="{{ url_for('admin.edit', announcement_id=a.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('admin.toggle_publish', announcement_id=a.id) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-small btn-secondary" type="submit">{{ 'Unpublish' if a.is_published else 'Publish' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.delete', announcement_id=a.id) }}" class="inline-form" data-confirm="Delete &quot;{{ a.title }}&quot;? This cannot be undone.">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-small btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="state">
+  <h2>You haven't created any announcements</h2>
+  <p>Create your first announcement. You can save it as a draft or publish it straight away.</p>
+  <a class="btn btn-primary" href="{{ url_for('admin.create') }}">New announcement</a>
+</div>
+{% endif %}
+{% endblock %}

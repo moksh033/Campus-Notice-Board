@@ -1,0 +1,29 @@
+<div class="bell" data-bell>
+  <button class="bell-button" type="button" aria-expanded="false" aria-controls="bell-panel"
+          aria-label="Notifications, {{ notification_unread_count }} unread" data-bell-toggle>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7zM10 20a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="bell-count" data-bell-count {% if not notification_unread_count %}hidden{% endif %}>{{ notification_unread_count }}</span>
+  </button>
+  <div id="bell-panel" class="bell-panel" hidden data-bell-panel>
+    <div class="bell-head">
+      <strong>Notifications</strong>
+      <button type="button" class="link-button" data-mark-all {% if not notification_unread_count %}hidden{% endif %}>Mark all as read</button>
+    </div>
+    {% if bell_notifications %}
+      <ul class="bell-list">
+        {% for item in bell_notifications %}
+          <li class="{{ '' if item.is_read else 'unread' }}" data-notification-item>
+            <a href="{{ url_for('notices.detail', announcement_id=item.announcement_id) }}" data-notification-id="{{ item.id }}">
+              <span class="bell-message">{{ item.message }}</span>
+              <span class="bell-time">{{ item.created_at|date_fmt }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="bell-empty">No notifications yet. New announcements will appear here.</p>
+    {% endif %}
+  </div>
+</div>

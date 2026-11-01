@@ -1,0 +1,6 @@
+<form class="search-form" method="get" action="{{ url_for('dashboard.index') }}" role="search" data-search-form>
+  {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+  <label class="visually-hidden" for="q">Search announcements</label>
+  <input id="q" name="q" type="search" value="{{ q }}" placeholder="Search by title, details or venue" maxlength="100">
+  <button type="submit" class="btn btn-primary" data-loading-text="Searching...">Search</button>
+</form>
